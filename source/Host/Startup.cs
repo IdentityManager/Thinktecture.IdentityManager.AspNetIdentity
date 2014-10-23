@@ -22,7 +22,9 @@ namespace Thinktecture.IdentityManager.Host
     {
         public void Configuration(IAppBuilder app)
         {
-            var factory = new Thinktecture.IdentityManager.Host.AspNetIdentityIdentityManagerFactory("AspId");
+            var connString = "AspId";
+            //var connString = "CustomAspId";
+            var factory = new Thinktecture.IdentityManager.Host.AspNetIdentityIdentityManagerFactory(connString);
             app.UseIdentityManager(new IdentityManagerConfiguration()
             {
                 IdentityManagerFactory = factory.Create

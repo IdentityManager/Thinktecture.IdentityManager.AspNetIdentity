@@ -36,6 +36,13 @@ namespace Thinktecture.IdentityManager.Host
         {
         }
     }
+    public class CustomRoleStore : RoleStore<CustomRole, int, CustomUserRole>
+    {
+        public CustomRoleStore(CustomDbContext context)
+            : base(context)
+        {
+        }
+    }
     public class CustomUser : IdentityUser<int, CustomUserLogin, CustomUserRole, CustomUserClaim> { }
     public class CustomRole : IdentityRole<int, CustomUserRole> { }
     public class CustomUserLogin : IdentityUserLogin<int> { }
@@ -45,6 +52,13 @@ namespace Thinktecture.IdentityManager.Host
     public class CustomUserManager : UserManager<CustomUser, int>
     {
         public CustomUserManager(CustomUserStore store)
+            : base(store)
+        {
+        }
+    }
+    public class CustomRoleManager : RoleManager<CustomRole, int>
+    {
+        public CustomRoleManager(CustomRoleStore store)
             : base(store)
         {
         }
