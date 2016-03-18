@@ -155,7 +155,18 @@ namespace IdentityManager.AspNetIdentity
             if (!UInt32.TryParse(sub, out key)) return 0;
             return key;
         }
-
+        public virtual Task<string> GeneratePasswordResetTokenAsync(TUserKey userId)
+        {
+            return userManager.GeneratePasswordResetTokenAsync(userId);
+        }
+        public virtual Task<TUser> FindByEmailAsync(string email)
+        {
+            return userManager.FindByEmailAsync(email);
+        }
+        public virtual Task<TUser> FindByNameAsync(string userName)
+        {
+            return userManager.FindByNameAsync(userName);
+        }
         public virtual IdentityManagerMetadata GetStandardMetadata(bool includeAccountProperties = true)
         {
             var update = new List<PropertyMetadata>();
@@ -216,7 +227,6 @@ namespace IdentityManager.AspNetIdentity
             };
             return meta;
         }
-
         public virtual PropertyMetadata GetMetadataForClaim(string type, string name = null, PropertyDataType dataType = PropertyDataType.String, bool required = false)
         {
             return PropertyMetadata.FromFunctions<TUser, string>(type, GetForClaim(type), SetForClaim(type), name, dataType, required);
