@@ -259,7 +259,16 @@ namespace IdentityManager.AspNetIdentity
                 return IdentityManagerResult.Success;
             };
         }
-
+        public virtual async Task<IdentityManagerResult> ResetPasswordAsync(string subject, string token, string newPassword)
+        {
+            TUserKey key = ConvertUserSubjectToKey(subject);
+            var result = await this.userManager.ResetPasswordAsync(key, token, newPassword);
+            if (!result.Succeeded)
+            {
+                return new IdentityManagerResult(result.Errors.First());
+            }
+            return IdentityManagerResult.Success;
+        }
         public virtual IdentityManagerResult SetPassword(TUser user, string password)
         {
             var token = this.userManager.GeneratePasswordResetToken(user.Id);
@@ -270,7 +279,6 @@ namespace IdentityManager.AspNetIdentity
             }
             return IdentityManagerResult.Success;
         }
-
         public virtual string GetEmail(TUser user)
         {
             return userManager.GetEmail(user.Id);
@@ -295,7 +303,6 @@ namespace IdentityManager.AspNetIdentity
             
             return IdentityManagerResult.Success;
         }
-
         public virtual string GetPhone(TUser user)
         {
             return userManager.GetPhoneNumber(user.Id);
