@@ -155,7 +155,18 @@ namespace IdentityManager.AspNetIdentity
             if (!UInt32.TryParse(sub, out key)) return 0;
             return key;
         }
-
+        public virtual Task<string> GeneratePasswordResetTokenAsync(TUserKey userId)
+        {
+            return userManager.GeneratePasswordResetTokenAsync(userId);
+        }
+        public virtual Task<TUser> FindByEmailAsync(string email)
+        {
+            return userManager.FindByEmailAsync(email);
+        }
+        public virtual Task<TUser> FindByNameAsync(string userName)
+        {
+            return userManager.FindByNameAsync(userName);
+        }
         public virtual IdentityManagerMetadata GetStandardMetadata(bool includeAccountProperties = true)
         {
             var update = new List<PropertyMetadata>();
@@ -216,7 +227,6 @@ namespace IdentityManager.AspNetIdentity
             };
             return meta;
         }
-
         public virtual PropertyMetadata GetMetadataForClaim(string type, string name = null, PropertyDataType dataType = PropertyDataType.String, bool required = false)
         {
             return PropertyMetadata.FromFunctions<TUser, string>(type, GetForClaim(type), SetForClaim(type), name, dataType, required);
@@ -249,7 +259,16 @@ namespace IdentityManager.AspNetIdentity
                 return IdentityManagerResult.Success;
             };
         }
-
+        public virtual async Task<IdentityManagerResult> ResetPasswordAsync(string subject, string token, string newPassword)
+        {
+            TUserKey key = ConvertUserSubjectToKey(subject);
+            var result = await this.userManager.ResetPasswordAsync(key, token, newPassword);
+            if (!result.Succeeded)
+            {
+                return new IdentityManagerResult(result.Errors.First());
+            }
+            return IdentityManagerResult.Success;
+        }
         public virtual IdentityManagerResult SetPassword(TUser user, string password)
         {
             var token = this.userManager.GeneratePasswordResetToken(user.Id);
@@ -260,7 +279,6 @@ namespace IdentityManager.AspNetIdentity
             }
             return IdentityManagerResult.Success;
         }
-
         public virtual string GetEmail(TUser user)
         {
             return userManager.GetEmail(user.Id);
@@ -285,7 +303,6 @@ namespace IdentityManager.AspNetIdentity
             
             return IdentityManagerResult.Success;
         }
-
         public virtual string GetPhone(TUser user)
         {
             return userManager.GetPhoneNumber(user.Id);
