@@ -539,11 +539,11 @@ namespace IdentityManager.AspNetIdentity
                 return propResult;
             }
 
-            var result = await userManager.UpdateAsync(user);
-            if (!result.Succeeded)
-            {
-                return new IdentityManagerResult(result.Errors.ToArray());
-            }
+            //var result = await userManager.UpdateAsync(user);
+            //if (!result.Succeeded)
+            //{
+            //    return new IdentityManagerResult(result.Errors.ToArray());
+            //}
 
             return IdentityManagerResult.Success;
         }
